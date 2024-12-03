@@ -30,7 +30,12 @@ class Evento extends Model
     ];
 
     public function categoria()
-{
-    return $this->belongsTo(Categoria::class);
-}
+    {
+        return $this->belongsTo(Categoria::class);
+    }
+
+    public function inscricoes()
+    {
+        return $this->hasMany(Inscricao::class);
+    }
 }

@@ -16,16 +16,25 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+
+        $user = $request->user();
+
+        $eventosInscritos = $user->eventos;
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'eventosInscritos' => $eventosInscritos,
         ]);
+        
     }
+
 
     /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {

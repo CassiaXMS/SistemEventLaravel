@@ -4,12 +4,12 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>{{ config('app.name', 'Laravel') }}</title>
+	<title>{{ config('app.name', 'EventEase') }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 	<meta name="description" content="This is meta description">
 	<meta name="author" content="Themefisher">
-	<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-	<link rel="icon" href="images/favicon.png" type="image/x-icon">
+	<link rel="shortcut icon" href="/front/logo/favicon2.png" type="image/x-icon">
+	<link rel="icon" href="/front/logo/favicon2.png" type="image/x-icon">
 
 	<!-- # Google Fonts-->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +30,7 @@
 
 
 	<!-- # Main Style Sheet -->
-	<link rel="stylesheet" href="{{ asset('/front/css/style.css') }}">
+	<link rel="stylesheet" href="{{ asset('/front/css/style.css') }}?v={{ time() }}">
   @livewireStyles
 </head>
 
@@ -41,17 +41,49 @@
 	<nav class="navbar navbar-expand-xl navbar-light text-center py-3">
 		<div class="container">
 			<a class="navbar-brand" href="index.html">
-				<img loading="prelaod" decoding="async" class="img-fluid" width="160" src="{{ asset('front/images/logo.png') }}" alt="Wallet">
+				<img loading="prelaod" decoding="async" class="img-fluid" width="200" src="{{ asset('/front/logo/logo4.png') }}" alt="Wallet">
+
 			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav m-auto mb-2 mb-lg-0">
-					<li class="nav-item"> <a class="nav-link" href="index.html">Eventos disponíveis</a></li>
-					<li class="nav-item "> <a class="nav-link" href="about.html">Meus Eventos</a></li>
-					<li class="nav-item "> <a class="nav-link" href="services.html">Sobre nós</a></li>
+					<li class="nav-item"> <a wire:navigate class="nav-link" href="{{ route('evento') }}">Eventos disponíveis</a></li>
+
+                    <!-- Verifica se o usuário está autenticado -->
+                    @auth
+                        <!-- Usuário logado, redireciona para a página de perfil -->
+                        <li class="nav-item "><a wire:navigate class="nav-link" href="{{ route('profile.edit') }}">Meus Eventos</a></li>
+                    @else
+                        <!-- Usuário não logado, redireciona para a página de login -->
+                        <li class="nav-item "><a wire:navigate class="nav-link" href="{{ route('login') }}">Meus Eventos</a></li>
+                    @endauth
+
+
+
+					<li class="nav-item "> <a wire:navigate class="nav-link" href="{{ route('sobreNos')}}">Sobre nós</a></li>
 				</ul>
-				<a href="#!" class="btn btn-outline-primary">Login</a>
+                @if (auth()->check())
+                    <!-- Menu para usuários autenticados -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Minha Conta
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Perfil</a></li>
+                            <li>
+                                <!-- Botão de logout -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Sair</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @else
+                    <!-- Botão de login para visitantes -->
+                    <a href="{{ route('login') }}" class="btn btn-outline-primary">Login</a>
+                @endif
 			</div>
 		</div>
 	</nav>
@@ -65,20 +97,20 @@
 		<div class="row justify-content-between">
 			<div class="col-lg-2 col-md-4 col-6 mb-4">
 				<div class="footer-widget">
-					<h2 class="mb-4 text-light font-secondary">EventEase</h2>
-                    <p>EventEase é um sistema de gerenciamento de eventos proposto para FATEC Campinas</p>
-
+                    <img loading="prelaod" decoding="async" class="img-fluid" width="200" src="{{ asset('/front/logo/logoDark.png') }}" alt="Wallet">
+                    <h5 class="mb-4 text-light font-secondary">Sistema de Gerenciamento de Eventos proposto para FATEC Campinas.</h5>
+					<p ></p>
 				</div>
 			</div>
 			<div class="col-lg-2 col-md-4 col-6 mb-4">
 				<div class="footer-widget">
 					<h3 class="mb-4 text-light font-secondary">Acesse</h3>
 					<ul class="list-unstyled">
-						<li class="mb-2"><a href="#!">Eventos disponíveis</a>
+						<li class="mb-2"><a wire:navigate class="nav-link" href="{{ route('evento') }}">Eventos Disponíveis</a>
 						</li>
-						<li class="mb-2"><a href="#!">Meus Eventos</a>
+						<li class="mb-2"><a wire:navigate class="nav-link" href="{{ route('sobreNos') }}">Meus Eventos</a>
 						</li>
-						<li class="mb-2"><a href="#!">Sobre nós</a>
+						<li class="mb-2"><a wire:navigate class="nav-link" href="{{ route('sobreNos') }}">Sobre nós</a>
 						</li>
 					</ul>
 				</div>
@@ -86,8 +118,8 @@
 			<div class="col-lg-2 col-md-4 col-6 mb-4">
 				<div class="footer-widget">
 					<h3 class="mb-4 text-light font-secondary">FATEC Campinas</h3>
-					<p>Av Cônego Antonio Rocatto nº 593 Jd Santa Mônica
-                        fateccampinas@gmail.com</p>
+                    <a wire:navigate class="nav-link" href="{{ route('sobreNos') }}">Av Cônego Antonio Rocatto nº 593 Jd Santa Mônica
+                        fateccampinas@gmail.com</a>
 				</div>
 			</div>
 		</div>

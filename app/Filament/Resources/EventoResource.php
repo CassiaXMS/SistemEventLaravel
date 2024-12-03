@@ -28,7 +28,7 @@ class EventoResource extends Resource
 {
     protected static ?string $model = Evento::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     public static function form(Form $form): Form
     {
@@ -123,10 +123,16 @@ class EventoResource extends Resource
                             ->schema([
                                 DateTimePicker::make('data_comecar_evento')
                                     ->label('Quando o evento começa')
+                                    ->minDate(now())
+                                    ->reactive()
+                                    ->rule('after_or_equal:today')
                                     ->required(),
 
                                 DateTimePicker::make('data_terminar_evento')
                                     ->label('Quando o evento termina')
+                                    ->minDate(now())
+                                    ->rule('after_or_equal:start_date') // Valida que a data final seja igual ou após a data de início
+                                    ->reactive() // Atualiza dinamicamente
                                     ->required(),
 
 
@@ -200,14 +206,20 @@ class EventoResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\IconColumn::make('publicado')
+                    ->label('Status')
                     ->sortable()
                     ->toggleable()
-                    ->label('Publicado')
                     ->boolean(),
-                Tables\Columns\ImageColumn::make('perfil_image'),
+                Tables\Columns\ImageColumn::make('perfil_image')
+                    ->label('Imagem'),
+
+
                 Tables\Columns\TextColumn::make('nome_convidado'),
                 Tables\Columns\TextColumn::make('nome_convidado'),
+                Tables\Columns\TextColumn::make('sala'),
                 Tables\Columns\TextColumn::make('data_comecar_evento')
+                    ->label('Data')
+
                     ->dateTime()
                     ->sortable()
 
